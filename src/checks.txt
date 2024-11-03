@@ -1,9 +1,0 @@
- // bitset<32> new_alpha(alpha);
-        // cout << "final alpha: " << endl;
-        // for(int i = columnNum - 1; i >= 0; i--) cout << new_alpha.test(i);
-        //  cout << endl << endl;
-
-
-        // cout << "final alpha: " << endl;
-        // for(int i = columnNum - 1; i >= 0; i--) cout << new_alpha.test(i);
-        // cout << endl << endl;

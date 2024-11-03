@@ -27,7 +27,7 @@ vector<vector<int>> userMatrix() {
         cin >> rowInput;
 
         if(rowInput.size() != columnNum) {
-            cout << "Invalid input length. Please enter exactly " << columnNum << " columns" << endl;
+            cout << "Invalid input length. Please enter exactly " << columnNum << " columns" << endl << endl;
             i--;
             continue;
         }
@@ -37,6 +37,8 @@ vector<vector<int>> userMatrix() {
         }
 
     }
+
+    cout << endl;
 
     return DM;
 
@@ -59,17 +61,22 @@ void printMatrix(const vector<vector<int>>& matrix) {
 int main() {
 
     int menu;
-    cout << "Welcome to the typical testor calculator! Please select an option: " << endl << endl;
+    cout << "Welcome to the typical testor calculator! Please select an option: " << endl;
+    
+    vector<vector<int>> DM;
 
+    do{
     cout << "1.) Input a new matrix\n"
-         << "2.) Use test matrix\n";
+         << "2.) Use test matrix\n"
+         << "3.) Exit\n";
 
     cin >> menu;
     cout << endl;
 
-    vector<vector<int>> DM;
-
-    if(menu == 1) DM = userMatrix(); 
+    if(menu == 1) {
+        DM = userMatrix(); 
+        break;
+    }
 
     else if(menu == 2) {
         // Test Matrix
@@ -81,14 +88,21 @@ int main() {
         {0, 1, 0, 1, 0},
         {1, 0, 1, 1, 0}
         };
-    }
-    
-    else{
-        cout << "Please enter a valid option" << endl;
-        return -1;
+
+        break;
     }
 
-    cout << "Difference Matrix Introduced: " << endl << endl;
+    else if(menu == 3) {
+        cout << "Exiting...";
+        return 0;
+    }
+    
+    else cout << "Please enter a valid option" << endl << endl;
+
+
+    } while(menu != 3);
+
+    cout << "Chosen Difference Matrix: " << endl << endl;
 
     printMatrix(DM);
 
@@ -99,6 +113,8 @@ int main() {
     printMatrix(BM);
 
     set<vector<int>> typicalTestors;
+
+    do{
     cout << "Which algorithm would you like to use to find the typical testors?" << endl;
 
     cout << "1.) YYC Algorithm\n"
@@ -108,14 +124,24 @@ int main() {
     cin >> menu;
     cout << endl;
 
-    if(menu == 1) typicalTestors = yycAlgorithm(BM);
-
-    else if(menu == 2) typicalTestors = btAlgorithm(BM);
-
-    else{
-        cout << "Please enter a valid option";
-        return -1;
+    if(menu == 1) {
+        typicalTestors = yycAlgorithm(BM);
+        break;
     }
+
+    else if(menu == 2) {
+        typicalTestors = btAlgorithm(BM);
+        break;
+    }
+
+    else if(menu == 3){
+        cout << "Exiting...";
+        return 0;
+    }
+
+    else cout << "Please enter a valid option" << endl << endl;
+        
+    } while(menu != 3);
 
     cout << "Typical Testors found:" << endl;
 
@@ -126,6 +152,7 @@ int main() {
         cout << endl;
         i++;
     }
+    cout << endl;
     return 0;
 
 }
