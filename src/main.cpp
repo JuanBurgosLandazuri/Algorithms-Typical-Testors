@@ -6,7 +6,7 @@
 using namespace std;
 
 //Function to create user-input Matrix
-vector<vector<int>> userMatrix() {
+vector<vector<bool>> userMatrix() {
 
     int rowNum;
     int columnNum;
@@ -17,7 +17,7 @@ vector<vector<int>> userMatrix() {
     cout << "Number of rows of the matrix: ";
     cin >> rowNum;
 
-    vector<vector<int>> DM(rowNum, vector<int>(columnNum));
+    vector<vector<bool>> DM(rowNum, vector<bool>(columnNum));
     
     cout << endl << "Please enter each row as a string of ONLY 1's and 0's (NO spaces): " << endl;
 
@@ -33,7 +33,7 @@ vector<vector<int>> userMatrix() {
         }
 
         for(int j = 0; j < columnNum; j++) {
-            DM[i][j] = (rowInput[j] == '1') ? 1 : 0;
+            DM[i][j] = rowInput[j] == '1';
         }
 
     }
@@ -45,7 +45,7 @@ vector<vector<int>> userMatrix() {
 }
 
 // Function to print a matrix in desired format
-void printMatrix(const vector<vector<int>>& matrix) {
+void printMatrix(const vector<vector<bool>>& matrix) {
 
     cout << setw(4);
     for(int i = 0; i < matrix[0].size(); i++) cout << "x_" << i + 1 << " ";
@@ -63,7 +63,7 @@ int main() {
     int menu;
     cout << "Welcome to the typical testor calculator! Please select an option: " << endl;
     
-    vector<vector<int>> DM;
+    vector<vector<bool>> DM;
 
     do{
     cout << "1.) Input a new matrix\n"
@@ -81,12 +81,10 @@ int main() {
     else if(menu == 2) {
         // Test Matrix
         DM = {
-        {0, 0, 1, 0, 0},
-        {1, 1, 0, 0, 0},
-        {1, 0, 1, 0, 0},
-        {0, 1, 0, 0, 0},
-        {0, 1, 0, 1, 0},
-        {1, 0, 1, 1, 0}
+        {1, 1, 1, 0, 0},
+        {1, 1, 0, 0, 1},
+        {1, 0, 1, 1, 0},
+        {1, 0, 1, 0, 1}
         };
 
         break;
@@ -106,7 +104,7 @@ int main() {
 
     printMatrix(DM);
 
-    vector<vector<int>> BM = reduceMatrix(DM);
+    vector<vector<bool>> BM = reduceMatrix(DM);
 
     cout << "Reduced Basic Matrix: " << endl << endl;
 

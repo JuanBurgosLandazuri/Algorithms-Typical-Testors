@@ -8,7 +8,7 @@
 using namespace std;
 
 // Function to check if a subset is a testor. Handles alpha updates
-bool isTestor(const vector<vector<int>>& BM, const vector<int>& subset, unsigned int &alpha) {
+bool isTestor(const vector<vector<bool>>& BM, const vector<int>& subset, unsigned long long &alpha) {
     
     vector<int> zero_rows; // Stores index of all-zero rows
     unsigned int columnNum = BM[0].size();
@@ -18,7 +18,7 @@ bool isTestor(const vector<vector<int>>& BM, const vector<int>& subset, unsigned
         bool allZeros = true;
 
         for(auto column: subset){
-            if(BM[row][column] == 1){
+            if(BM[row][column]){
                 allZeros =  false;
                 break;
             }
@@ -52,7 +52,7 @@ bool isTestor(const vector<vector<int>>& BM, const vector<int>& subset, unsigned
         for(auto row: zero_rows){
             int tempK = columnNum - 1;
             for(int column = 0; column < columnNum; column++) {
-                if(BM[row][column] == 1) tempK = column; 
+                if(BM[row][column]) tempK = column; 
             }
 
             if(tempK < k) k = tempK;
@@ -76,15 +76,15 @@ bool isTestor(const vector<vector<int>>& BM, const vector<int>& subset, unsigned
 }
 
 // Main BT algorithm function
-set<vector<int>> btAlgorithm(const vector<vector<int>>& BM) {
+set<vector<int>> btAlgorithm(const vector<vector<bool>>& BM) {
     set<vector<int>> typicalTestors; // Output set of typical testors
     int columnNum = BM[0].size();
 
-    unsigned int alpha = 1; // Start from (0...01)
+    unsigned long long alpha = 1; // Start from (0...01)
 
     while (alpha < (1u << columnNum)) { 
         vector<int> subset;
-
+        
         // Translates bits into column index
         for (int j = 0; j < columnNum; j++) {
             if (alpha & (1u << j)) subset.push_back(columnNum - 1 - j);

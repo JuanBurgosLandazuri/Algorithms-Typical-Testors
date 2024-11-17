@@ -3,7 +3,7 @@
 using namespace std;
 
 // Function to check if row 'p' is a subrow of row 't'
-bool isSubrow(const vector<int>& p, const vector<int>& t) {
+bool isSubrow(const vector<bool>& p, const vector<bool>& t) {
     bool strictlyLess = false;
     for (size_t col = 0; col < p.size(); ++col) {
         if (p[col] > t[col]) return false; // 'p' cannot be greater than 't' in any column
@@ -13,8 +13,8 @@ bool isSubrow(const vector<int>& p, const vector<int>& t) {
 }
 
 // Function to reduce DM to BM
-vector<vector<int>> reduceMatrix(const vector<vector<int>>& DM) {
-    vector<vector<int>> BM; // Output reduced matrix
+vector<vector<bool>> reduceMatrix(const vector<vector<bool>>& DM) {
+    vector<vector<bool>> BM; // Output reduced matrix
     vector<bool> isBasic(DM.size(), true); // Flag to track if a row is basic
 
     // Iterates through every row in DM

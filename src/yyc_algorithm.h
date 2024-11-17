@@ -6,7 +6,7 @@ using namespace std;
 
 
 // Compatibility set check
-bool findCompatibleSet(const vector<int>& testor, const vector<vector<int>>& BM, int column_id, int current_row) {
+bool findCompatibleSet(const vector<int>& testor, const vector<vector<bool>>& BM, int column_id, int current_row) {
     
     //Verify Condition 1
 
@@ -21,10 +21,10 @@ bool findCompatibleSet(const vector<int>& testor, const vector<vector<int>>& BM,
 
         // Adds up the values in the testor columns and the column that is being checked for compatibility
         for(auto column: testor) {
-            sum += BM[row][column];
+            if(BM[row][column]) sum++;
             refSM_row.push_back(BM[row][column]);
         }
-        sum += BM[row][column_id];
+        if(BM[row][column_id]) sum++;
         refSM_row.push_back(BM[row][column_id]);
 
         if(sum == 1) {
@@ -42,7 +42,8 @@ bool findCompatibleSet(const vector<int>& testor, const vector<vector<int>>& BM,
         int sum = 0;
 
         // Sums all the values of each columns
-        for(int row = 0; row < refSM.size(); row++) sum += refSM[row][column];
+        for(int row = 0; row < refSM.size(); row++) 
+            if(refSM[row][column])sum++;
 
         if(sum < 1) return false;
     }
@@ -52,7 +53,7 @@ bool findCompatibleSet(const vector<int>& testor, const vector<vector<int>>& BM,
 }
 
 // Main YYC algorithm function
-set<vector<int>> yycAlgorithm(const vector<vector<int>>& BM) {
+set<vector<int>> yycAlgorithm(const vector<vector<bool>>& BM) {
     set<vector<int>> typicalTestors; // Output set of typical testors
 
     // Initialize with the columns that have 1 in the first row
