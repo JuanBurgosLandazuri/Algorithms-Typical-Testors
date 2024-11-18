@@ -92,14 +92,14 @@ int main() {
 //          << "---------------------------------------------------------------------------------------" << endl;
 
 //     for (int N = 1; N <= 5 ; N++) {
-//         vector<vector<int>> result = phiOperator(AB, N);
-//         vector<vector<int>> sortedResult = sortMatrix(result);
+//         vector<vector<bool>> result = phiOperator(AB, N);
+//         vector<vector<bool>> sortedResult = sortMatrix(result);
 
 //         cout << setw(2) << N << setw(4) << "P^" << N << setw(8)<< "(O(A,B))" << setw(6) << result.size() << setw(6) << result[0].size();
 //         printExecutionTime(result, sortedResult); 
 //     }
 
-//     cout << "---------------------------------------------------------------------------------------" << endl << endl;
+    cout << "---------------------------------------------------------------------------------------" << endl << endl;
 
     cout << "Table 6" << endl
          << "Relative efficiency of the tested algorithms against the gamma operator." << endl

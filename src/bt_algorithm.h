@@ -7,6 +7,48 @@
 
 using namespace std;
 
+//When the number of typical testors becomes to large, iterating over every testor becomes inefficient
+//This function verifies the typicality of a testor directly inside the matrix, borrowing logic from the YYC algorithm
+
+bool isCompatibleSet(const vector<vector<bool>>& BM, vector<int>& subset) {
+    int one_rows = 0; // Counter for number of rows who's sum of elements add up to 1
+    vector<vector<int>> refSM; // Matrix used later to verify condition 2.
+    int rowNum = BM.size();
+
+    for(int row = 0; row < rowNum; row++) {
+        vector<int> refSM_row;
+        int sum = 0;
+
+        // Adds up the values in the testor columns and the column that is being checked for compatibility
+        for(auto column: subset) {
+            if(BM[row][column]) sum++;
+            refSM_row.push_back(BM[row][column]);
+        }
+
+        if(sum == 1) {
+            one_rows++;
+            refSM.push_back(refSM_row); // refSM contains all rows which add up to 1
+        }
+    }
+
+    if(one_rows < subset.size()) return false;
+
+    // Verify Condition 2
+
+    // Iterates through every column of refSM
+    for(int column = 0; column < refSM[0].size(); column++) {
+        int sum = 0;
+
+        // Sums all the values of each columns
+        for(int row = 0; row < refSM.size(); row++) 
+            if(refSM[row][column]) sum++;
+
+        if(sum < 1) return false;
+    }
+
+    return true;  
+}
+
 // Function to check if a subset is a testor. Handles alpha updates
 bool isTestor(const vector<vector<bool>>& BM, const vector<int>& subset, unsigned long long &alpha) {
     
@@ -25,7 +67,6 @@ bool isTestor(const vector<vector<bool>>& BM, const vector<int>& subset, unsigne
         }
         if(allZeros) zero_rows.push_back(row);
     }
-
     
     if(zero_rows.empty()) {
 
@@ -34,11 +75,16 @@ bool isTestor(const vector<vector<bool>>& BM, const vector<int>& subset, unsigne
         // Calculates k (the position of the rightmost 1 in alpha)
         int k = columnNum;
         for(int i  = columnNum - 1; i >= 0; i--) {
-            if(alpha & (1 << i)) k = columnNum - i;
+            if(alpha & (1ull << i)) k = columnNum - i;
         }
 
         //Skips 2^(n-k) positions
         alpha += pow(2, columnNum - k);
+
+        // bitset<64> new_alpha(alpha);
+        // cout << "final alpha: " << endl;
+        // for(int i = columnNum - 1; i >= 0; i--) cout << new_alpha.test(i);
+        //     cout << endl << endl;
         return true;
     }
 
@@ -59,7 +105,7 @@ bool isTestor(const vector<vector<bool>>& BM, const vector<int>& subset, unsigne
         }
         
         // All positions before k are kept the same
-        bitset<32> new_alpha(alpha);
+        bitset<64> new_alpha(alpha);
         
         // Position k is set to 1
         new_alpha.set( (columnNum - 1) - k, true);
@@ -70,7 +116,11 @@ bool isTestor(const vector<vector<bool>>& BM, const vector<int>& subset, unsigne
             new_alpha.set(i, false);
         }
 
-        alpha = new_alpha.to_ulong();
+        // cout << "final alpha: " << endl;
+        // for(int i = columnNum - 1; i >= 0; i--) cout << new_alpha.test(i);
+        //     cout << endl << endl;
+
+        alpha = new_alpha.to_ullong();
         return false;
     }
 }
@@ -82,37 +132,52 @@ set<vector<int>> btAlgorithm(const vector<vector<bool>>& BM) {
 
     unsigned long long alpha = 1; // Start from (0...01)
 
-    while (alpha < (1u << columnNum)) { 
+    while (alpha < (1ull << columnNum)) { 
         vector<int> subset;
+
+        // cout << "Subset: " << endl;
+        // for (auto i: subset)
+        //     cout << i << " " << endl;
         
         // Translates bits into column index
         for (int j = 0; j < columnNum; j++) {
-            if (alpha & (1u << j)) subset.push_back(columnNum - 1 - j);
+            if (alpha & (1ull << j)) subset.push_back(columnNum - 1 - j);
         }
 
         // Check if the subset is a testor
         if (isTestor(BM, subset, alpha)) {
 
-            // Check if the new testor is a superset of any testor already stored
-            bool isTypical = true;
+            if(typicalTestors.size() < columnNum) {
 
-            // Iterates over every testor stored
-            for (const auto& testor : typicalTestors) {
-                bool isSuperSet = true;
-                for (int column : testor) {
+                // Check if the new testor is a superset of any testor already stored
+                bool isTypical = true;
+ 
+                // Iterates over every testor stored
+                for (const auto& testor : typicalTestors) {
+                    bool isSuperSet = true;
+                    for (int column : testor) {
 
-                    // If any element in the typical testor is different to the new testor, the new testor is not a superset
-                    if (find(subset.begin(), subset.end(), column) == subset.end()) {
-                        isSuperSet = false;
+                        // If any element in the typical testor is different to the new testor, the new testor is not a superset
+                        if (find(subset.begin(), subset.end(), column) == subset.end()) {
+                            isSuperSet = false;
+                            break;
+                        }
+                    }
+                    if (isSuperSet) {
+                        isTypical = false;
                         break;
                     }
                 }
-                if (isSuperSet) {
-                    isTypical = false;
-                    break;
-                }
+                if (isTypical) 
+                    typicalTestors.insert(subset); // Store typical testor
             }
-            if (isTypical) typicalTestors.insert(subset); // Store typical testor
+
+            else {
+                bool isTypical = isCompatibleSet(BM, subset);
+                if(isTypical)
+                    typicalTestors.insert(subset);
+
+            }
         }
     }
 

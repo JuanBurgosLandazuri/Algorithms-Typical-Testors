@@ -5,6 +5,31 @@
 
 using namespace std;
 
+// Function to 
+vector<vector<bool>> gammaOperator(const vector<vector<bool>>& A, int N) {
+
+    if (N < 1) return {};
+
+    int rows = A.size();
+    int cols = A[0].size();
+
+    vector<vector<bool>> result(N * rows, vector<bool>(N * cols, 0));
+
+    for (int n = 0; n < N; ++n) {
+        int rowOffset = n * rows;  
+        int colOffset = n * cols;  
+
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < cols; ++j) {
+                result[rowOffset + i][colOffset + j] = A[i][j];
+            }
+        }
+    }
+
+    return result;
+}
+
+
 //Function to create user-input Matrix
 vector<vector<bool>> userMatrix() {
 
@@ -87,6 +112,7 @@ int main() {
         {1, 0, 1, 0, 1}
         };
 
+        DM = gammaOperator(DM, 6);
         break;
     }
 
@@ -118,7 +144,6 @@ int main() {
     cout << "1.) YYC Algorithm\n"
          << "2.) BT Algorithm\n";
     
-
     cin >> menu;
     cout << endl;
 

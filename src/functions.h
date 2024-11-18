@@ -100,7 +100,7 @@ vector<vector<bool>> thetaOperator(const vector<vector<bool>>& A, const vector<v
 
             // Insert B[i] elements into resulting row
             for (int k = 0; k < B[0].size(); k++) {
-                AB[rowIndex][A[0].size() + k] = B[j][k];
+                AB[rowIndex][colsA + k] = B[j][k];
             }
 
             rowIndex++;
